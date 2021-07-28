@@ -14,8 +14,7 @@ const Eurocup2020 = new Eurocup('Eurocup 2020', teams);
 
 console.log(' Comienza la Eurocopa 2020 \n ======================== \n');
 
-console.log(' Octavos de Final \n ======================== \n');
+Eurocup2020.scheduleTournament();
 
-Eurocup2020.scheduleRound();
 
-console.log(Eurocup2020.RoundOf16);
+// console.log(Eurocup2020.RoundOf);
