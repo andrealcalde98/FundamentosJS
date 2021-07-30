@@ -4,13 +4,11 @@ export default class Eurocup {
         this.RoundOf = [];
         this.NextRound = [];
         this.losers = []; // array para 3r y 4to puesto
-
         this.setupTeams(teams);
-
     }
 
     random() {
-        return Math.floor(Math.random() * (10 - 0)) + 0;
+        return Math.floor(Math.random() * (5 - 0)) + 0;
     }
 
     setupTeams(teamNames) {
@@ -28,44 +26,53 @@ export default class Eurocup {
     }
 
     scheduleTournament() {
-
         const round = ["OCTAVOS", "QUARTOS", "SEMIS", "FINAL!",];
-
 
         for (let i = 0; i < 4; i++) {
             if (i === 3) {
                 // Ronda Final, donde muestra el campeón
                 console.log("\n " + round[i] + " \n =========\n");
-                this.initSchedule(); // crea la tabla con las celdas vacías (template {home: 'Home', away: 'Away'})
-                this.setLocalTeams(); // hace un set de cada partido.home
-                this.setAwayTeams(); // hace un set de cada partido.away
-                this.setResult(); // simulamos el partido y lo repetimos si hace falta
-                this.setWinner(); // setea los ganadores              
-                this.ShowFinalist(); // muestra el Campeon en la ultima ronda
-                this.SetTeamsNextRound(); //vacia el array y lo prepara para la siguiente ronda
+                this.FinalRoundConfig();
             } else if (i === 2) {
                 // Ronda Semis, donde calcula el tercer y cuarto puesto
                 console.log("\n " + round[i] + " \n =========\n");
-                this.initSchedule(); // crea la tabla con las celdas vacías (template {home: 'Home', away: 'Away'})
-                this.setLocalTeams(); // hace un set de cada partido.home
-                this.setAwayTeams(); // hace un set de cada partido.away
-                this.setResult(); // simulamos el partido y lo repetimos si hace falta
-                this.setWinner(); // setea los ganadores     
-                this.ShowPreFinal(); // muestra el tercer puesto
-                this.SetTeamsNextRound(); //vacia el array y lo prepara para la siguiente ronda
+                this.SemisConfig();
             } else {
                 // Otras rondas sin configuración previa
                 console.log("\n " + round[i] + " \n =========\ \n");
-                this.initSchedule(); // crea la tabla con las celdas vacías (template {home: 'Home', away: 'Away'})
-                this.setLocalTeams(); // hace un set de cada partido.home
-                this.setAwayTeams(); // hace un set de cada partido.away
-                this.setResult(); // simulamos el partido y lo repetimos si hace falta
-                this.setWinner(); // setea los ganadores
-                this.SetTeamsNextRound(); //vacia el array y lo prepara para la siguiente ronda
+                this.OtherRoundConfig();
             }
         }
     }
 
+    FinalRoundConfig() {
+        this.initSchedule(); // crea la tabla con las celdas vacías (template {home: 'Home', away: 'Away'})
+        this.setLocalTeams(); // hace un set de cada partido.home
+        this.setAwayTeams(); // hace un set de cada partido.away
+        this.setResult(); // simulamos el partido y lo repetimos si hace falta
+        this.setWinner(); // setea los ganadores              
+        this.ShowFinalist(); // muestra el Campeon en la ultima ronda
+        this.SetTeamsNextRound(); //vacia el array y lo prepara para la siguiente ronda
+    }
+
+    SemisConfig() {
+        this.initSchedule(); // crea la tabla con las celdas vacías (template {home: 'Home', away: 'Away'})
+        this.setLocalTeams(); // hace un set de cada partido.home
+        this.setAwayTeams(); // hace un set de cada partido.away
+        this.setResult(); // simulamos el partido y lo repetimos si hace falta
+        this.setWinner(); // setea los ganadores     
+        this.ShowSemifinalist(); // muestra el tercer puesto
+        this.SetTeamsNextRound(); //vacia el array y lo prepara para la siguiente ronda
+    }
+
+    OtherRoundConfig() {
+        this.initSchedule(); // crea la tabla con las celdas vacías (template {home: 'Home', away: 'Away'})
+        this.setLocalTeams(); // hace un set de cada partido.home
+        this.setAwayTeams(); // hace un set de cada partido.away
+        this.setResult(); // simulamos el partido y lo repetimos si hace falta
+        this.setWinner(); // setea los ganadores
+        this.SetTeamsNextRound(); //vacia el array y lo prepara para la siguiente ronda
+    }
 
     initSchedule() {
         const numberOfMatches1Round = this.teams.length / 2; // numero de partidos por ronda
@@ -85,12 +92,8 @@ export default class Eurocup {
                     winner: 'winner'
                 };
                 this.RoundOf.push(match);
-
             }
-            // ya tenemos todos los partidos de una jornada
-            // this.RoundOf16.push(tie) // añadimos la jornada a la planificación
         }
-
     }
 
     setLocalTeams() {
@@ -99,8 +102,7 @@ export default class Eurocup {
         const maxHomeTeams = this.teams.length / 2 - 1; // rellenamos los locales por ronda
 
         // teams.length === 16 (depende de la ronda)
-        // debemos rellenar 8 espacios para los locales
-
+        // debemos rellenar x espacios para los locales
 
         this.RoundOf.forEach(match => {
             match.home = teamNames[teamIndex];
@@ -109,26 +111,24 @@ export default class Eurocup {
                 teamIndex = 0;
             }
         })
-
     }
 
 
     setAwayTeams() {
         const teamNames = this.teams.map(team => team.name); // array de nombres de los equipos
-        let teamIndex = this.teams.length / 2; // rellenamos a traves de la segunda mitad
-        const maxAwayTeams = this.teams.length; //llegamos hasta la ultima posicion
+        let teamIndex = this.teams.length - 1; // comemzamos por el final, "ganador primera llave vs ganador última llave"
+        const maxAwayTeams = this.teams.length / 2; //llegamos hasta la ultima posicion a rellenar, la mitad del array
 
         // teams.length === 16
         // debemos rellenar 8 espacios para los visitantes
 
         this.RoundOf.forEach(match => {
             match.away = teamNames[teamIndex];
-            teamIndex++;
-            if (teamIndex > maxAwayTeams) {
+            teamIndex--;
+            if (teamIndex < maxAwayTeams) {
                 teamIndex = 0;
             }
         })
-
     }
 
     setResult() {
@@ -157,18 +157,25 @@ export default class Eurocup {
         })
     }
 
-
-    ShowPreFinal() {
-
+    ShowSemifinalist() {
         let loser1Goals = 0;
         let loser2Goals = 0;
         let numero = 0; // numero que indicara cual de los dos equipos del array es el ganador
 
-        do {        // repetimos partidos hasta que no haya empate
+        this.RoundOf.forEach(match => {  // recuperamos perdedores para el tercer y cuarto puesto
+            if (match.homeGoals > match.awayGoals) {
+                this.losers.push(match.away);
+            } else {
+                this.losers.push(match.home);
+            }
+        })
+
+        do {   // repetimos el partido hasta que no haya empate
             loser1Goals = this.random();
             loser2Goals = this.random();
         } while (loser1Goals == loser2Goals);
 
+        // devolvemos la posicion del equipo que gana
         if (loser1Goals > loser2Goals) {
             numero = 0;
         } else {
@@ -176,14 +183,6 @@ export default class Eurocup {
         }
 
         console.log("\n " + "TERCER PUESTO" + " \n =========\ \n");
-
-        this.RoundOf.forEach(match => {        // recuperamos perdedores para el tercer y cuarto puesto
-            if (match.homeGoals > match.awayGoals) {
-                this.losers.push(match.away);
-            } else {
-                this.losers.push(match.home);
-            }
-        })
 
         // pintamos por pantalla equipos, resultado y ganador
         console.log(`${this.losers[0]} ${loser1Goals} - ${loser2Goals} ${this.losers[1]} | Ganador -> ${this.losers[numero]}`)
@@ -196,12 +195,10 @@ export default class Eurocup {
     }
 
     SetTeamsNextRound() {
-
-        this.teams = [] //vaciamos Teams
+        this.teams = [] //vaciamos teams
         this.teams = this.NextRound.slice(); // pasamos a teams los ganadores de la ronda
-        this.NextRound = []; // vaciamos para la siguinte iteracion
-        this.RoundOf = []; // vaciamos para la sigueinte iteracion
-
+        this.RoundOf = []; // vaciamos array de resultados para la siguinte iteracion
+        this.NextRound = []; // vaciamos array para ganadores
         this.setupTeams(this.teams);
         // console.log(this.teams);
     }
