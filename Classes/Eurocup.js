@@ -1,7 +1,7 @@
 export default class Eurocup {
     constructor(name, teams = []) {
         this.name = name;
-        this.RoundOf = [];
+        this.Matches = [];
         this.NextRound = [];
         this.losers = []; // array para 3r y 4to puesto
         this.setupTeams(teams);
@@ -82,17 +82,16 @@ export default class Eurocup {
         for (let i = 0; i < numberOfMatches1Round; i++) {
             // const tie = []; // matchDay ===> jornada
             y++;
-            for (let j = 0; j < Quali; j++) {
-                const match = {
-                    tie: `Q${y}`,
-                    home: 'Home',
-                    away: 'Away',
-                    homeGoals: 0,
-                    awayGoals: 0,
-                    winner: 'winner'
-                };
-                this.RoundOf.push(match);
+            const match = {
+                tie: `Q${y}`,
+                home: 'Home',
+                away: 'Away',
+                homeGoals: 0,
+                awayGoals: 0,
+                winner: 'winner'
             }
+            this.Matches.push(match);
+
         }
     }
 
@@ -104,7 +103,7 @@ export default class Eurocup {
         // teams.length === 16 (depende de la ronda)
         // debemos rellenar x espacios para los locales
 
-        this.RoundOf.forEach(match => {
+        this.Matches.forEach(match => {
             match.home = teamNames[teamIndex];
             teamIndex++;
             if (teamIndex > maxHomeTeams) {
@@ -122,7 +121,7 @@ export default class Eurocup {
         // teams.length === 16
         // debemos rellenar 8 espacios para los visitantes
 
-        this.RoundOf.forEach(match => {
+        this.Matches.forEach(match => {
             match.away = teamNames[teamIndex];
             teamIndex--;
             if (teamIndex < maxAwayTeams) {
@@ -132,17 +131,16 @@ export default class Eurocup {
     }
 
     setResult() {
-        this.RoundOf.forEach(match => {
-            match.homeGoals = this.random();
-            match.awayGoals = this.random();
-            while (match.homeGoals == match.awayGoals) {
+        this.Matches.forEach(match => {
+            do {   // repetimos el partido hasta que no haya empate
+                match.homeGoals = this.random();
                 match.awayGoals = this.random();
-            }
+            } while (match.homeGoals == match.awayGoals);
         })
     }
 
     setWinner() {
-        this.RoundOf.forEach(match => {
+        this.Matches.forEach(match => {
             if (match.homeGoals > match.awayGoals) {
                 match.winner = match.home;
                 // const winnerTeam = this.teams.filter(team => team.name === match.winner)[0];
@@ -162,7 +160,7 @@ export default class Eurocup {
         let loser2Goals = 0;
         let numero = 0; // numero que indicara cual de los dos equipos del array es el ganador
 
-        this.RoundOf.forEach(match => {  // recuperamos perdedores para el tercer y cuarto puesto
+        this.Matches.forEach(match => {  // recuperamos perdedores para el tercer y cuarto puesto
             if (match.homeGoals > match.awayGoals) {
                 this.losers.push(match.away);
             } else {
@@ -189,15 +187,17 @@ export default class Eurocup {
     }
 
     ShowFinalist() {
-        this.RoundOf.forEach(match => {
-            console.log(`\n ========================== \n ${match.winner} Campeona de la Euro 2020 \n ==========================`)
+        this.Matches.forEach(match => {
+            console.log(`\n==========================================`);
+            console.log(`=== ${match.winner} Campeona de la Euro 2020 ===`);
+            console.log('==========================================');
         })
     }
 
     SetTeamsNextRound() {
         this.teams = [] //vaciamos teams
         this.teams = this.NextRound.slice(); // pasamos a teams los ganadores de la ronda
-        this.RoundOf = []; // vaciamos array de resultados para la siguinte iteracion
+        this.Matches = []; // vaciamos array de partidos para la siguinte ronda
         this.NextRound = []; // vaciamos array para ganadores
         this.setupTeams(this.teams);
         // console.log(this.teams);

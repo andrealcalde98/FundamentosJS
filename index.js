@@ -12,7 +12,9 @@ import Eurocup from './Classes/Eurocup.js'
 
 const Eurocup2020 = new Eurocup('Eurocup 2020', teams);
 
-console.log(' Comienza la Eurocopa 2020 \n ======================== \n');
+console.log('===================================');
+console.log('==== Comienza la Eurocopa 2020 ====');
+console.log('===================================');
 
 Eurocup2020.scheduleTournament();
 
