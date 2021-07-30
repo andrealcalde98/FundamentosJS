@@ -8,7 +8,7 @@ export default class Eurocup {
     }
 
     random() {
-        return Math.floor(Math.random() * (5 - 0)) + 0;
+        return Math.floor(Math.random() * (6 - 0)) + 0;
     }
 
     setupTeams(teamNames) {
