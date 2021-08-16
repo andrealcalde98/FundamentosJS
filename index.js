@@ -14,7 +14,11 @@ const Eurocup2020 = new Eurocup('Eurocup 2020', teams);
 
 console.log('===================================');
 console.log('==== Comienza la Eurocopa 2020 ====');
-console.log('===================================');
+console.log('=================================== \n');
+
+console.log('Equipos participantes Playoffs \n');
+
+console.table(teams);
 
 Eurocup2020.scheduleTournament();
 
